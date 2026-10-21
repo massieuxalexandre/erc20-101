@@ -34,11 +34,15 @@ contract Erc20Test is Test {
         evaluator.ex2_testErc20TickerAndSupply();
 
         erc20.setCustomerWhiteListed(address(evaluator), true);
+
         evaluator.ex3_testGetToken();
     }
 
     function testEx4() public {
         evaluator.ex2_testErc20TickerAndSupply();
+
+        erc20.setCustomerWhiteListed(address(evaluator), true);
+        erc20.setCustomerTierLevel(address(evaluator), 1);
         evaluator.ex4_testBuyToken();
     }
 
@@ -55,6 +59,45 @@ contract Erc20Test is Test {
         erc20.setCustomerWhiteListed(address(evaluator), true);
 
         evaluator.ex6_testAllowListing();
+    }
+
+    function testEx7() public {
+        evaluator.ex2_testErc20TickerAndSupply();
+        erc20.setCustomerWhiteListed(address(evaluator), false);
+        erc20.setCustomerTierLevel(address(evaluator), 0);
+
+        evaluator.ex7_testDenyListing();
+    }
+
+    function testEx8() public {
+        evaluator.ex2_testErc20TickerAndSupply();
+
+        erc20.setCustomerWhiteListed(address(evaluator), false);
+        erc20.setCustomerTierLevel(address(evaluator), 0);
+        evaluator.ex7_testDenyListing();
+
+
+        erc20.setCustomerWhiteListed(address(evaluator), true);
+        erc20.setCustomerTierLevel(address(evaluator), 1);
+        evaluator.ex8_testTier1Listing();
+    }
+
+    function testEx9() public {
+        evaluator.ex2_testErc20TickerAndSupply();
+
+        erc20.setCustomerWhiteListed(address(evaluator), false);
+        erc20.setCustomerTierLevel(address(evaluator), 0);
+        evaluator.ex7_testDenyListing();
+
+        erc20.setCustomerWhiteListed(address(evaluator), true);
+        erc20.setCustomerTierLevel(address(evaluator), 1);
+        evaluator.ex8_testTier1Listing();
+
+        erc20.setCustomerWhiteListed(address(evaluator), true);
+        erc20.setCustomerTierLevel(address(evaluator), 2);
+        
+
+        evaluator.ex9_testTier2Listing();
     }
 
 }

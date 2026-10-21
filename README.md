@@ -48,7 +48,16 @@ $ anvil
 ### Deploy
 
 ```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+# $ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+forge script script/MyAllInOne.s.sol:MyAllInOneScript \
+  --rpc-url "$SEPOLIA_RPC_URL" \
+  --sender "$WALLET" \
+  --mnemonics "$MNEMONIC" \
+  --gas-estimate-multiplier 800 \
+  --broadcast \
+  --slow \
+  -vv
+
 ```
 
 ### Cast

@@ -5,10 +5,9 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract Erc20 is ERC20 {
     mapping (address => bool) private whiteListedCustomers;
+    mapping (address => uint256) private tierLevelCustomers;
 
-    constructor(uint256 initialSupply, string memory ticker)
-        ERC20("ERC20 Exercise Token", ticker)
-    {
+    constructor(uint256 initialSupply, string memory ticker)  ERC20("ERC20 Exercise Token", ticker) {
         _mint(msg.sender, initialSupply);
     }
 
@@ -20,19 +19,27 @@ contract Erc20 is ERC20 {
 
     function buyToken() external payable returns (bool) {
         require(msg.value > 0, "You need to send some ether");
-        uint256 amount = msg.value * 1000;
+        require(whiteListedCustomers[msg.sender], "You are not whitelisted");
+        require(tierLevelCustomers[msg.sender] > 0, "You are not in a valid tier");
+        uint256 amount = msg.value * 1000 * tierLevelCustomers[msg.sender];
         _mint(msg.sender, amount);
         return true;
     }
 
+    function setCustomerWhiteListed(address customerAddress, bool allowed) external {
+        whiteListedCustomers[customerAddress] = allowed;
+    }
+    
     function isCustomerWhiteListed(address customerAddress) external returns (bool) {
         return whiteListedCustomers[customerAddress];
     }
 
-    function setCustomerWhiteListed(
-        address customerAddress,
-        bool allowed
-    ) external {
-        whiteListedCustomers[customerAddress] = allowed;
+    function setCustomerTierLevel(address customerAddress, uint256 tier) external {
+        tierLevelCustomers[customerAddress] = tier;
+    }
+    
+
+    function customerTierLevel(address customerAddress) external returns (uint256) {
+        return tierLevelCustomers[customerAddress];
     }
 }
